@@ -29,7 +29,6 @@ export default class Location extends React.Component {
 
   componentWillMount() {
     this._googlePredictions = [];
-    this._country = this.props.country || DEFAULT_COUNTRY;
     this._noMatching = this.props.noMatching || NO_MATCHING;
   }
 
@@ -122,9 +121,13 @@ export default class Location extends React.Component {
 
     if (isThereAnyText) {
       return new Promise((resolve, reject) => {
+        var restrictions = {}
+        if (this._country != null) {
+          restrictions = { country: this._country }
+        }
         service.getPlacePredictions({
           input: text,
-          componentRestrictions: { country: this._country },
+          componentRestrictions: restrictions,
           types: ['(regions)']
         }, (result) => {
           if (result !== null) {
